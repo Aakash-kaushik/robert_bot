@@ -127,7 +127,7 @@ max_length=10
 def unicode_to_ascii(s):
     return "".join(c for c in unicodedata.normalize('NFD',s) if unicodedata.category(c)!="Mn")
 
-#try these on some example sentences
+
 def normalize_string(s):
     s=unicode_to_ascii(s.lower().strip())
     s=re.sub(r"([.!?])",r" \1",s)
@@ -230,8 +230,8 @@ def batch2train_data(voc,pair_batch):
     output,mask,max_target_length=output_var(output_batch,voc)
     return inp,lengths,output,mask,max_target_length
 
-#model part
 
+#model part
 class encoder_rnn(nn.Module):
     def __init__(self,hidden_size,embedding,n_layers=1,dropout=0):
         super(encoder_rnn,self).__init__()
@@ -317,7 +317,6 @@ class attn_decoder_rnn(nn.Module):
         return output,hidden
 
 #train part
-
 def mask_nll_loss(inp,target,mask):
     n_total=mask.sum()
     cross_entropy = -torch.log(torch.gather(inp,1,target.view(-1,1)).squeeze(1))
@@ -415,7 +414,7 @@ def train_iters(model_name, voc, pairs, encoder, decoder, encoder_optimizer, dec
                        },os.path.join(directory,"{}_{}.tar".format(iteration,"checkpoint")))
 
 
-#EVAL PART
+#eval part
 class greedy_search_decoder(nn.Module):
     def __init__(self,encoder,decoder):
         super(greedy_search_decoder,self).__init__()
@@ -501,7 +500,6 @@ train_iters(model_name, voc, pairs, encoder, decoder, encoder_optimizer, decoder
            print_every, save_every, clip, corpus_name, load_filename)'''
 
 #eval
-
 model_name = 'cb_model'
 attn_model = 'dot'
 attn_model = 'general'
