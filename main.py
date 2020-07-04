@@ -526,7 +526,7 @@ if loadFilename:
     embedding_sd = checkpoint['embedding']
     voc.__dict__ = checkpoint['voc_dict']
 
-print('Building encoder and decoder ...')
+
 # Initialize word embeddings
 embedding = nn.Embedding(voc.num_words, hidden_size)
 if loadFilename:
@@ -540,7 +540,7 @@ if loadFilename:
 # Use appropriate device
 encoder = encoder.to(device)
 decoder = decoder.to(device)
-print('Models built and ready to go!')
+print('Robert: Hi, I am Robert')
 
 encoder.eval()
 decoder.eval()
