@@ -1,6 +1,6 @@
 # robert_bot
 ![](./assets/demo.gif)
-### [Try it](https://robert-the-bot.herokuapp.com/) Yourself.
+### [Try It Yourself](https://robert-the-bot.herokuapp.com/)
 ### Setup
 <!--
 1. Downlaod pretrained weights from [here](https://yadi.sk/d/R9TfLSq8Tlv3-g)
