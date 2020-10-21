@@ -56,20 +56,20 @@ def sentence_pair_extract(convs):
 
 
 #paths to files 
-movie_file=os.path.join(corpus,"movie_lines.txt")
-character_file=os.path.join(corpus,"movie_conversations.txt")
-formatted_file=os.path.join(corpus,"formatted_movie_lines.txt")
+#movie_file=os.path.join(corpus,"movie_lines.txt")
+#character_file=os.path.join(corpus,"movie_conversations.txt")
+#formatted_file=os.path.join(corpus,"formatted_movie_lines.txt")
 
-delimiter="\t"
-delimiter=str(codecs.decode(delimiter,"unicode_escape"))
+#delimiter="\t"
+#delimiter=str(codecs.decode(delimiter,"unicode_escape"))
 
-lines=load_lines(movie_file,["lineID", "characterID", "movieID", "character", "text"])
-convs=load_conv(character_file,lines,["character1ID", "character2ID", "movieID", "utteranceIDs"])
+#lines=load_lines(movie_file,["lineID", "characterID", "movieID", "character", "text"])
+#convs=load_conv(character_file,lines,["character1ID", "character2ID", "movieID", "utteranceIDs"])
 
-with open(formatted_file, "w", encoding="utf-8") as outputfile:
-    writer=csv.writer(outputfile,delimiter=delimiter,lineterminator="\n")
-    for pair in sentence_pair_extract(convs):
-        writer.writerow(pair)
+#with open(formatted_file, "w", encoding="utf-8") as outputfile:
+#    writer=csv.writer(outputfile,delimiter=delimiter,lineterminator="\n")
+#    for pair in sentence_pair_extract(convs):
+#        writer.writerow(pair)
 
 
 #text_manip part
@@ -445,59 +445,15 @@ def evaluate(encoder,decoder,searcher,voc,sentence,max_length=max_length):
     decoded_words=[voc.idx2word[token.item()] for token in tokens]
     return decoded_words
 
-def eval_input(encoder,decoder,searcher,voc):
-    input_sentence=""
-    while(1):
-        try:
-            input_sentence=input("> ")
-            if input_sentence=='q' or input_sentence=="quit": break
-            input_sentence=normalize_string(input_sentence)
-            output_words=evaluate(encoder,decoder,searcher,voc,input_sentence)
-            output_words[:]=[x for x in output_words if not(x=='EOS' or x=='PAD')]
-            print("Robert:",' '.join(output_words))
-        except KeyError:
-            print("Error: Encountered unknown word.")
+def eval_input(encoder,decoder,searcher,voc,input_sentence="hey"):
+    try:
+        input_sentence=normalize_string(input_sentence)
+        output_words=evaluate(encoder,decoder,searcher,voc,input_sentence)
+        output_words[:]=[x for x in output_words if not(x=='EOS' or x=='PAD')]
+    except KeyError:
+        output_words = -1
+    return output_words
 
-'''#training
-model_name = 'cb_model'
-attn_model = 'dot'
-hidden_size = 500
-encoder_n_layers = 2
-decoder_n_layers = 2
-dropout = 0.1
-batch_size = 64
-
-# Set checkpoint to load from; set to None if starting from scratch
-attn_model="general"
-load_filename=None
-embedding = nn.Embedding(voc.num_words, hidden_size)
-encoder = encoder_rnn(hidden_size, embedding, encoder_n_layers, dropout)
-decoder = attn_decoder_rnn(attn_model, embedding, hidden_size, voc.num_words, decoder_n_layers, dropout)
-encoder = encoder.to(device)
-decoder = decoder.to(device)
-
-clip=50.0
-teacher_forcing_ratio=1.0
-learning_rate=0.0001
-decoder_learning_ratio=5.0
-n_iteration=5000
-print_every=1
-save_every=500
-
-encoder.train()
-decoder.train()
-
-encoder_optimizer=optim.Adam(encoder.parameters(),lr=learning_rate)
-decoder_optimizer=optim.Adam(decoder.parameters(),lr=learning_rate*decoder_learning_ratio)
-
-if load_filename:
-    encoder_optimizer.load_state_dict(encoder_optimizer_sd)
-    decoder_optimizer.load_state_dict(decoder_optimizer_sd)
-
-print("starting training")
-train_iters(model_name, voc, pairs, encoder, decoder, encoder_optimizer, decoder_optimizer,
-           embedding, encoder_n_layers, decoder_n_layers, save_dir, n_iteration, batch_size,
-           print_every, save_every, clip, corpus_name, load_filename)'''
 
 #eval
 model_name = 'cb_model'
@@ -511,7 +467,7 @@ dropout = 0.1
 batch_size = 64
 
 # Set checkpoint to load from; set to None if starting from scratch
-loadFilename = r"checkpoint/5000_checkpoint.tar"
+loadFilename = r"./checkpoint/5000_checkpoint.tar"
 checkpoint_iter = 5000
 
 if loadFilename:
@@ -540,13 +496,10 @@ if loadFilename:
 # Use appropriate device
 encoder = encoder.to(device)
 decoder = decoder.to(device)
-print('Robert: Hi, I am Robert')
+#print('Robert: Hi, I am Robert')
 
 encoder.eval()
 decoder.eval()
 
 # Initialize search module
 searcher = greedy_search_decoder(encoder, decoder)
-
-# Begin chatting (uncomment and run the following line to begin)
-eval_input(encoder, decoder, searcher, voc)
