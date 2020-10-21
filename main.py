@@ -511,11 +511,7 @@ dropout = 0.1
 batch_size = 64
 
 # Set checkpoint to load from; set to None if starting from scratch
-<<<<<<< HEAD:bot.py
-loadFilename = r"5000_checkpoint.tar"
-=======
 loadFilename = r"checkpoint/5000_checkpoint.tar"
->>>>>>> parent of 1034050... streamlit app:main.py
 checkpoint_iter = 5000
 
 if loadFilename:
